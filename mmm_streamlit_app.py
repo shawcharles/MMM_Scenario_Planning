@@ -442,8 +442,7 @@ with tab2:
             fig.update_layout(
                 title='Total Contributions Including Base Over Time',
                 xaxis_title="Date",
-                yaxis_title="Revenue Contribution",
-                template="plotly_white"
+                yaxis_title="Revenue Contribution                template="plotly_white"
             )
 
             return fig
