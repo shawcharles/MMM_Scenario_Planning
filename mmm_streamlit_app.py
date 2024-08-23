@@ -198,14 +198,6 @@ with tab2:
                 st.error(f"Error generating new_dates: {e}")
                 return pd.DataFrame()  # Return an empty DataFrame to avoid further errors
         
-            # Debugging information using Streamlit
-            st.subheader("Generated new_dates:")
-            st.write(new_dates)
-        
-            if new_dates.empty:
-                st.error("Generated new_dates is empty. Please check the date range generation.")
-                return pd.DataFrame()  # Return an empty DataFrame to avoid further errors
-        
             X_out_of_sample = pd.DataFrame({date_column: new_dates})
         
             for column in media_columns:
@@ -263,9 +255,9 @@ with tab2:
             st.subheader("Generated out-of-sample data:")
             st.write(X_out_of_sample.head())
         
-            return X_out_of_sample
-                
+            return X_out_of_sample               
         
+
         def load_and_predict_prophet(prophet_path, future_dates):
             model = joblib.load(prophet_path)
             future = pd.DataFrame({'ds': future_dates})
@@ -298,19 +290,14 @@ with tab2:
             return forecast
 
 
-
         def new_data_media_contributions(X: pd.DataFrame, mmm: DelayedSaturatedMMM, original_scale: bool = True):
-            # Debugging information
-            st.subheader("Columns in input DataFrame:")
-            st.write(X.columns.tolist())
-            st.subheader("Control columns expected by the model:")
-            st.write(mmm.control_columns)
-        
-            # Check for missing columns
-            missing_columns = [col for col in mmm.control_columns if col not in X.columns]
-            if missing_columns:
-                st.error(f"Missing columns in input DataFrame: {missing_columns}")
-                return pd.DataFrame(), pd.DataFrame(), pd.DataFrame()  # Return empty DataFrames to avoid further errors
+            # Ensure all required columns are present
+            required_columns = set(mmm.control_columns + mmm.channel_columns)
+            missing_columns = required_columns - set(X.columns)
+            
+            # Add missing columns with default values
+            for col in missing_columns:
+                X[col] = 0  # or some appropriate default value
         
             mmm._data_setter(X)
             
