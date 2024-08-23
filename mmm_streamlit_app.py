@@ -179,7 +179,7 @@ with tab2:
             new_dates = pd.date_range(start=last_date, periods=1 + n_new, freq=freq)[1:]
         
             if interval_type == 'weekly':
-                new_dates new_dates[new_dates.weekday == 6]  # Do we want to ensure that all dates start on Monday == 1 or Sunday == 6?
+                new_dates = new_dates[new_dates.weekday == 6]  # Do we want to ensure that all dates start on Monday == 1 or Sunday == 6?
         
             X_out_of_sample = pd.DataFrame({date_column: new_dates})
         
