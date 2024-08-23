@@ -253,7 +253,11 @@ with tab2:
                 for column in X_out_of_sample.columns:
                     if column != date_column and column not in promos:
                         X_out_of_sample[column] *= (1 + np.random.normal(0, 0.05, size=n_new))
-        
+
+
+            # Ensure 'date' column is created correctly:
+            X_out_of_sample = pd.DataFrame({date_column: new_dates})
+                                            
             X_out_of_sample = create_features(X_out_of_sample)
             X_out_of_sample = scale_prophet_columns(X_out_of_sample)
         
