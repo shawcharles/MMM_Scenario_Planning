@@ -131,6 +131,11 @@ with tab2:
         def load_and_predict_prophet(prophet_path, future_dates):
             model = joblib.load(prophet_path)
             future = pd.DataFrame({'ds': future_dates})
+            
+            # Debugging information
+            print("Future DataFrame for Prophet prediction:")
+            print(future.head())
+            
             forecast = model.predict(future)
             return forecast
 
@@ -169,59 +174,64 @@ with tab2:
                 return X[column].iloc[-1]
 
         # Generate out-of-sample data based on user input
+
         def generate_out_of_sample_data(n_new, channel_spends, scenario, promo_periods, custom_spending_patterns):
             new_dates = pd.date_range(start=last_date, periods=1 + n_new, freq=freq)[1:]
-
+        
             if interval_type == 'weekly':
-                new_dates = new_dates[new_dates.weekday == 0]  # Ensure all dates start on Monday
-
+                new_dates new_dates[new_dates.weekday == 0]  # Ensure all dates start on Monday
+        
             X_out_of_sample = pd.DataFrame({date_column: new_dates})
-
+        
             for column in media_columns:
                 X_out_of_sample[column] = channel_spends[column]
-
+        
             for promo in promos:
                 X_out_of_sample[promo] = 0
-
+        
             for promo_period in promo_periods:
                 promo_start_date, promo_end_date, selected_promos = promo_period
                 promo_dates_range = pd.date_range(start=promo_start_date, end=promo_end_date, freq=freq)
                 for promo_date in promo_dates_range:
                     for promo in selected_promos:
                         X_out_of_sample.loc[X_out_of_sample[date_column] == promo_date, promo] = 1
-
+        
             for pattern in custom_spending_patterns:
                 channel, start_date, end_date, spend_value = pattern
                 date_range = pd.date_range(start=start_date, end=end_date, freq=freq)
                 for date in date_range:
                     if date in X_out_of_sample[date_column].values:
                         X_out_of_sample.loc[X_out_of_sample[date_column] == date, channel] = spend_value
-
+        
             for column in extra_features_cols:
                 if column in X.columns:
                     if X[column].dtype == 'float':
                         X_out_of_sample[column] = X[column].iloc[-1] * (1 + np.random.normal(0, 0.05, size=n_new))
                     else:
                         X_out_of_sample[column] = X[column].iloc[-1]
-
+        
             if prophet_columns:
                 forecast = load_and_predict_prophet(prophet_path, new_dates)
                 for column in prophet_columns:
                     X_out_of_sample[column] = forecast['yhat'].values
-
+        
             if scenario['random_events']:
                 for column in X_out_of_sample.columns:
                     if column != date_column and column not in promos:
                         X_out_of_sample[column] *= (1 + np.random.normal(0, 0.1, size=n_new))
-
+        
             if scenario['add_noise']:
                 for column in X_out_of_sample.columns:
                     if column != date_column and column not in promos:
                         X_out_of_sample[column] *= (1 + np.random.normal(0, 0.05, size=n_new))
-
+        
             X_out_of_sample = create_features(X_out_of_sample)
             X_out_of_sample = scale_prophet_columns(X_out_of_sample)
-
+        
+            # Debugging information
+            print("Generated out-of-sample data:")
+            print(X_out_of_sample.head())
+        
             return X_out_of_sample
 
         def new_data_media_contributions(X: pd.DataFrame, mmm: DelayedSaturatedMMM, original_scale: bool = True):
