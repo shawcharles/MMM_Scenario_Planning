@@ -130,7 +130,7 @@ with tab2:
         # Load and predict with Prophet model
         def load_and_predict_prophet(prophet_path, future_dates):
             model = joblib.load(prophet_path)
-            future = pd.DataFrame({'': future_dates})
+            future = pd.DataFrame({'ds': future_dates})
             
             # Debugging information using Streamlit
             st.subheader("Future DataFrame for Prophet prediction:")
@@ -190,6 +190,10 @@ with tab2:
             st.subheader("Generated new_dates:")
             st.write(new_dates)
         
+            if new_dates.empty:
+                st.error("Generated new_dates is empty. Please check the date range generation.")
+                return pd.DataFrame()  # Return an empty DataFrame to avoid further errors
+        
             X_out_of_sample = pd.DataFrame({date_column: new_dates})
         
             for column in media_columns:
@@ -221,8 +225,14 @@ with tab2:
         
             if prophet_columns:
                 forecast = load_and_predict_prophet(prophet_path, new_dates)
-                for column in prophet_columns:
-                    X_out_of_sample[column] = forecast['yhat'].values
+                if not forecast.empty:
+                    for column in prophet_columns:
+                        if column in forecast.columns:
+                            X_out_of_sample[column] = forecast['yhat'].values
+                        else:
+                            st.warning(f"Column '{column}' not found in Prophet forecast.")
+                else:
+                    st.error("Prophet forecast is empty. Skipping Prophet columns.")
         
             if scenario['random_events']:
                 for column in X_out_of_sample.columns:
