@@ -205,8 +205,8 @@ with tab2:
                 X_out_of_sample[column] = channel_spends[column]
         
             # Conditional 'promo' Column Creation
-            if scenario['promo_events']:
-                X_out_of_sample['promo'] = 0  # Initialize the column
+            #if scenario['promo_events']:
+            #    X_out_of_sample['promo'] = 0  # Initialize the column
         
                 for promo_period in promo_periods:
                     promo_start_date, promo_end_date, selected_promos = promo_period
@@ -622,27 +622,27 @@ with tab2:
         random_events = st.sidebar.checkbox('Include Random Events', value=False)
         add_noise = st.sidebar.checkbox('Add Noise', value=False)
 
-        promo_periods = []
-        if promo_events:
-            num_periods = st.sidebar.number_input("Number of Promo Periods", min_value=1, max_value=10, value=1, step=1, format='%d')
-            for i in range(num_periods):
-                st.sidebar.subheader(f"Promo Period {i+1}")
-                promo_start_date = st.sidebar.date_input(f"Select Promo Start Date {i+1}")
-                promo_end_date = st.sidebar.date_input(f"Select Promo End Date {i+1}")
-                selected_promos = st.sidebar.multiselect(f"Select Promos for Period {i+1}", promos, key=f"{i}")
-                if promo_start_date and promo_end_date and selected_promos:
-                    promo_periods.append((promo_start_date, promo_end_date, selected_promos))
+        #promo_periods = []
+        #if promo_events:
+        #    num_periods = st.sidebar.number_input("Number of Promo Periods", min_value=1, max_value=10, value=1, step=1, format='%d')
+        #    for i in range(num_periods):
+        #        st.sidebar.subheader(f"Promo Period {i+1}")
+        #        promo_start_date = st.sidebar.date_input(f"Select Promo Start Date {i+1}")
+        #        promo_end_date = st.sidebar.date_input(f"Select Promo End Date {i+1}")
+        #        selected_promos = st.sidebar.multiselect(f"Select Promos for Period {i+1}", promos, key=f"{i}")
+        #        if promo_start_date and promo_end_date and selected_promos:
+        #           promo_periods.append((promo_start_date, promo_end_date, selected_promos))
 
         if st.sidebar.button('Apply Scenario'):
             custom_scenario = {
-                'promo_events': promo_events,
+                #'promo_events': promo_events,
                 'random_events': random_events,
                 'add_noise': add_noise
             }
             X_out_of_sample = generate_out_of_sample_data(n_new, channel_spends, custom_scenario, promo_periods, custom_spending_patterns)
         else:
             custom_scenario = {
-                'promo_events': promo_events,
+                #'promo_events': promo_events,
                 'random_events': random_events,
                 'add_noise': add_noise
             }
