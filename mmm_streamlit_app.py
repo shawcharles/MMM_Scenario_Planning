@@ -130,11 +130,16 @@ with tab2:
         # Load and predict with Prophet model
         def load_and_predict_prophet(prophet_path, future_dates):
             model = joblib.load(prophet_path)
-            future = pd.DataFrame({'ds': future_dates})
+            future = pd.DataFrame({'': future_dates})
             
-            # Debugging information
-            print("Future DataFrame for Prophet prediction:")
-            print(future.head())
+            # Debugging information using Streamlit
+            st.subheader("Future DataFrame for Prophet prediction:")
+            st.write(future.head())
+            
+            # Check if future DataFrame has rows
+            if future.empty:
+                st.error("The future DataFrame is empty. Please check the date range generation.")
+                return pd.DataFrame()  # Return an empty DataFrame to avoid further errors
             
             forecast = model.predict(future)
             return forecast
@@ -181,9 +186,9 @@ with tab2:
             if interval_type == 'weekly':
                 new_dates = new_dates[new_dates.weekday == 6]  # Ensure all dates start on Sunday
         
-            # Debugging information
-            print("Generated new_dates:")
-            print(new_dates)
+            # Debugging information using Streamlit
+            st.subheader("Generated new_dates:")
+            st.write(new_dates)
         
             X_out_of_sample = pd.DataFrame({date_column: new_dates})
         
@@ -232,9 +237,9 @@ with tab2:
             X_out_of_sample = create_features(X_out_of_sample)
             X_out_of_sample = scale_prophet_columns(X_out_of_sample)
         
-            # Debugging information
-            print("Generated out-of-sample data:")
-            print(X_out_of_sample.head())
+            # Debugging information using Streamlit
+            st.subheader("Generated out-of-sample data:")
+            st.write(X_out_of_sample.head())
         
             return X_out_of_sample
 
