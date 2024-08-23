@@ -654,7 +654,11 @@ with tab2:
                 'random_events': random_events,
                 'add_noise': add_noise
             }
-            X_out_of_sample = generate_out_of_sample_data(n_new, channel_spends, custom_scenario, promo_periods, custom_spending_patterns)
+            X_out_of_sample = generate_out_of_sample_data(n_new
+                                                          , channel_spends
+                                                          , custom_scenario
+                                                          #, promo_periods
+                                                          , custom_spending_patterns)
 
         st.subheader(f'Historical Marketing Spend Over Last {n_historical} Periods ({interval_type.capitalize()})')
         fig_historical = go.Figure()
@@ -692,20 +696,20 @@ with tab2:
                 line=dict(color=channel_colors[column])
             ))
 
-        if promo_events:
-            for promo_period in promo_periods:
-                promo_start_date, promo_end_date, selected_promos = promo_period
-                promo_dates_range = pd.date_range(start=promo_start_date, end=promo_end_date, freq=freq)
-                for promo_date in promo_dates_range:
-                    for promo in selected_promos:
-                        fig_forecast.add_trace(go.Scatter(
-                            x=[promo_date],
-                            y=[max(X_out_of_sample[column].max() for column in media_columns)],
-                            mode='markers',
-                            marker=dict(size=6, symbol='circle', color='blue'),
-                            name=f'Forecast {promo} Events',
-                            showlegend=False
-                        ))
+      #  if promo_events:
+      #      for promo_period in promo_periods:
+      #          promo_start_date, promo_end_date, selected_promos = promo_period
+      #          promo_dates_range = pd.date_range(start=promo_start_date, end=promo_end_date, freq=freq)
+      #          for promo_date in promo_dates_range:
+      #              for promo in selected_promos:
+      #                  fig_forecast.add_trace(go.Scatter(
+      #                      x=[promo_date],
+      #                      y=[max(X_out_of_sample[column].max() for column in media_columns)],
+      #                      mode='markers',
+      #                      marker=dict(size=6, symbol='circle', color='blue'),
+      #                      name=f'Forecast {promo} Events',
+      #                      showlegend=False
+      #                  ))
 
         fig_forecast.update_layout(
             title=f'Forecasted Marketing Spend for Next {n_new} Periods ({interval_type.capitalize()})',
