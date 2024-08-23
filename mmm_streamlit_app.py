@@ -406,19 +406,30 @@ with tab2:
 
         # Function to plot overall contributions using Plotly
         def out_of_sample_all_contributions_plot(contributions_pivot, date_column='date'):
+            # Define base columns that should be included in the 'Base' category
             base_cols = ['intercept'] + extra_features_cols + prophet_columns + promos
+            
+            # Identify any missing base columns in the contributions_pivot DataFrame
             missing_cols = [col for col in base_cols if col not in contributions_pivot.columns]
             if missing_cols:
                 st.warning(f"Missing base columns: {missing_cols}")
-
+        
+            # Find available base columns that are present in the contributions_pivot DataFrame
             available_base_cols = [col for col in base_cols if col in contributions_pivot.columns]
+            
+            # Sum the contributions of the available base columns to create a 'Base' column
             contributions_pivot['Base'] = contributions_pivot[available_base_cols].sum(axis=1)
+            
+            # Drop the individual base columns from the DataFrame, keeping only the 'Base' column
             contributions_pivot = contributions_pivot.drop(columns=available_base_cols, errors='ignore')
-
+        
+            # Order the remaining columns by their total contribution in descending order
             column_order = contributions_pivot.drop('Base', axis=1).sum(axis=0).sort_values(ascending=False).index
-
+        
+            # Initialize a Plotly figure
             fig = go.Figure()
-
+        
+            # Add the 'Base' contributions as a stacked area plot
             fig.add_trace(go.Scatter(
                 x=contributions_pivot.index,
                 y=contributions_pivot['Base'],
@@ -428,7 +439,8 @@ with tab2:
                 line=dict(color='grey', width=0),
                 fill='tonexty'
             ))
-
+        
+            # Add each channel's contributions as a stacked area plot
             for channel in column_order:
                 fig.add_trace(go.Scatter(
                     x=contributions_pivot.index,
@@ -438,13 +450,15 @@ with tab2:
                     stackgroup='one',
                     line=dict(color=channel_colors.get(channel, 'rgb(0,0,0)'))  # Use channel_colors
                 ))
-
+        
+            # Update the layout of the figure
             fig.update_layout(
                 title='Total Contributions Including Base Over Time',
                 xaxis_title="Date",
-                yaxis_title="Revenue Contribution                template="plotly_white"
+                yaxis_title="Revenue Contribution",
+                template="plotly_white"
             )
-
+        
             return fig
 
         # Determine default values and ranges for sliders based on interval type
