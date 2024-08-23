@@ -707,7 +707,7 @@ with tab2:
                         ))
 
         fig_forecast.update_layout(
-            title=f'Forecasted Marketing Spend for Next {n_new} {interval_type.capitalize()}s',
+            title=f'Forecasted Marketing Spend for Next {n_new} Periods ({interval_type.capitalize()})',
             xaxis_title='Date',
             yaxis_title='Spend',
             template='plotly_white'
