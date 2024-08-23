@@ -598,7 +598,7 @@ with tab2:
             }
             X_out_of_sample = generate_out_of_sample_data(n_new, channel_spends, custom_scenario, promo_periods, custom_spending_patterns)
 
-        st.subheader(f'Historical Marketing Spend Over Last {n_historical} periods, delta =  {interval_type.capitalize()}')
+        st.subheader(f'Historical Marketing Spend Over Last {n_historical} periods ({interval_type.capitalize()})')
         fig_historical = go.Figure()
 
         historical_data = X[pd.to_datetime(X[date_column]) >= (last_date - pd.DateOffset(days=n_historical * (7 if interval_type == 'weekly' else 30 if interval_type == 'monthly' else 1)))]
@@ -613,7 +613,7 @@ with tab2:
             ))
 
         fig_historical.update_layout(
-            title=f'Historical Marketing Spend Over Last {n_historical} {interval_type.capitalize()}s',
+            title=f'Historical Marketing Spend Over Last {n_historical} periods ({interval_type.capitalize()})',
             xaxis_title='Date',
             yaxis_title='Spend',
             template='plotly_white'
