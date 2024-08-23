@@ -212,12 +212,12 @@ with tab2:
             #if scenario['promo_events']:
             #    X_out_of_sample['promo'] = 0  # Initialize the column
         
-                for promo_period in promo_periods:
-                    promo_start_date, promo_end_date, selected_promos = promo_period
-                    promo_dates_range = pd.date_range(start=promo_start_date, end=promo_end_date, freq=freq)
-                    for promo_date in promo_dates_range:
-                        if promo_date in X_out_of_sample[date_column].values:
-                            X_out_of_sample.loc[X_out_of_sample[date_column] == promo_date, 'promo'] = 1
+            #    for promo_period in promo_periods:
+            #        promo_start_date, promo_end_date, selected_promos = promo_period
+            #        promo_dates_range = pd.date_range(start=promo_start_date, end=promo_end_date, freq=freq)
+            #        for promo_date in promo_dates_range:
+            #            if promo_date in X_out_of_sample[date_column].values:
+            #                X_out_of_sample.loc[X_out_of_sample[date_column] == promo_date, 'promo'] = 1
         
             for pattern in custom_spending_patterns:
                 channel, start_date, end_date, spend_value = pattern
@@ -643,7 +643,11 @@ with tab2:
                 'random_events': random_events,
                 'add_noise': add_noise
             }
-            X_out_of_sample = generate_out_of_sample_data(n_new, channel_spends, custom_scenario, promo_periods, custom_spending_patterns)
+            X_out_of_sample = generate_out_of_sample_data(n_new
+                                                          , channel_spends
+                                                          , custom_scenario
+                                                          #, promo_periods
+                                                          , custom_spending_patterns)
         else:
             custom_scenario = {
                 #'promo_events': promo_events,
