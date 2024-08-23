@@ -626,7 +626,7 @@ with tab2:
         st.sidebar.markdown(f"**Total Budget for Period:** ${total_budget_period:.2f}")
         st.sidebar.markdown(f"**Daily Budget:** ${daily_budget:.2f}")
 
-        promo_events = st.sidebar.checkbox('Include Promo Events', value=False)
+        #promo_events = st.sidebar.checkbox('Include Promo Events', value=False)
         random_events = st.sidebar.checkbox('Include Random Events', value=False)
         add_noise = st.sidebar.checkbox('Add Noise', value=False)
 
