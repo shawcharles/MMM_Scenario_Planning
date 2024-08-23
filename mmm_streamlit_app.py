@@ -183,9 +183,9 @@ with tab2:
         
         def generate_out_of_sample_data(n_new, channel_spends, scenario, promo_periods, custom_spending_patterns):
             # Display last_date and freq for debugging
-            st.subheader("Debugging Information")
-            st.write(f"last_date: {last_date}")
-            st.write(f"freq: {freq}")
+            #st.subheader("Debugging Information")
+            #st.write(f"last_date: {last_date}")
+            #st.write(f"freq: {freq}")
         
             # Check if last_date is valid
             if pd.isnull(last_date):
