@@ -621,7 +621,7 @@ with tab2:
 
         st.plotly_chart(fig_historical)
 
-        st.subheader(f'Forecasted Marketing Spend for Next {n_new} {interval_type.capitalize()}s')
+        st.subheader(f'Forecasted Marketing Spend for Next {n_new} periods ({interval_type.capitalize()})')
         fig_forecast = go.Figure()
 
         for column in media_columns:
