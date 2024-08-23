@@ -265,6 +265,7 @@ with tab2:
         
             return X_out_of_sample
         
+
         def load_and_predict_prophet(prophet_path, future_dates):
             model = joblib.load(prophet_path)
             future = pd.DataFrame({'ds': future_dates})
@@ -293,7 +294,20 @@ with tab2:
             
             return forecast
 
+
         def new_data_media_contributions(X: pd.DataFrame, mmm: DelayedSaturatedMMM, original_scale: bool = True):
+            # Debugging information
+            st.subheader("Columns in input DataFrame:")
+            st.write(X.columns.tolist())
+            st.subheader("Control columns expected by the model:")
+            st.write(mmm.control_columns)
+        
+            # Check for missing columns
+            missing_columns = [col for col in mmm.control_columns if col not in X.columns]
+            if missing_columns:
+                st.error(f"Missing columns in input DataFrame: {missing_columns}")
+                return pd.DataFrame(), pd.DataFrame(), pd.DataFrame()  # Return empty DataFrames to avoid further errors
+        
             mmm._data_setter(X)
             
             with mmm.model:
@@ -305,7 +319,7 @@ with tab2:
             channel_contributions = posterior_predictive.posterior_predictive["channel_contributions"]
             intercept = posterior_predictive.posterior_predictive["intercept"]
             control_contributions = posterior_predictive.posterior_predictive["control_contributions"]
-
+        
             if original_scale:
                 channel_contributions = xr.DataArray(
                     mmm.get_target_transformer().inverse_transform(
@@ -326,7 +340,7 @@ with tab2:
             channel_contributions_df = channel_contributions.to_dataframe(name='contribution').reset_index()
             control_contributions_df = control_contributions.to_dataframe(name='contribution').reset_index()
             control_contributions_df = control_contributions_df.rename(columns={'control': 'channel'})
-
+        
             intercept_mean = intercept.mean(dim=("chain", "draw")).item()
             dates = channel_contributions_df['date'].unique()
             intercept_df = pd.DataFrame({
@@ -334,12 +348,12 @@ with tab2:
                 'contribution': intercept_mean,
                 'channel': 'intercept'
             })
-
+        
             if 'date' in channel_contributions_df.columns:
                 channel_contributions_df['date'] = pd.to_datetime(channel_contributions_df['date'], errors='coerce')
             if 'date' in control_contributions_df.columns:
                 control_contributions_df['date'] = pd.to_datetime(control_contributions_df['date'], errors='coerce')
-
+        
             return channel_contributions_df, intercept_df, control_contributions_df
 
         # Define a bright color palette for channels
