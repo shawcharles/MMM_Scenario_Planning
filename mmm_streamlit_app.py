@@ -203,8 +203,8 @@ with tab2:
                 new_dates = new_dates[new_dates.weekday == 6]  # Ensure all dates start on Sunday
         
             # Debugging information using Streamlit
-            st.subheader("Generated new_dates:")
-            st.write(new_dates)
+            #st.subheader("Generated new_dates:")
+            #st.write(new_dates)
         
             if new_dates.empty:
                 st.error("Generated new_dates is empty. Please check the date range generation.")
