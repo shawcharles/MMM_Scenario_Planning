@@ -39,7 +39,7 @@ def determine_prophet_columns(config):
 # Streamlit interface
 st.set_page_config(layout="wide")  # Set the layout to wide mode
 
-st.title('MMM Out-of-Sample Data Generation and Prediction')
+st.title('MMM Scenario Planning and Optimization')
 
 # Tabs for Data Upload and Scenario Planning
 tab1, tab2 = st.tabs(["Data Upload", "Scenario Planning"])
