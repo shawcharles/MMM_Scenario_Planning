@@ -178,14 +178,13 @@ with tab2:
             else:
                 return X[column].iloc[-1]
 
-        # Generate out-of-sample data based on user input
+        # Generate out-of-sample data based on user input        
 
-        
         def generate_out_of_sample_data(n_new, channel_spends, scenario, promo_periods, custom_spending_patterns):
             # Display last_date and freq for debugging
-            #st.subheader("Debugging Information")
-            #st.write(f"last_date: {last_date}")
-            #st.write(f"freq: {freq}")
+            st.subheader("Debugging Information")
+            st.write(f"last_date: {last_date}")
+            st.write(f"freq: {freq}")
         
             # Check if last_date is valid
             if pd.isnull(last_date):
@@ -199,12 +198,9 @@ with tab2:
                 st.error(f"Error generating new_dates: {e}")
                 return pd.DataFrame()  # Return an empty DataFrame to avoid further errors
         
-            if interval_type == 'weekly':
-                new_dates = new_dates[new_dates.weekday == 6]  # Ensure all dates start on Sunday
-        
             # Debugging information using Streamlit
-            #st.subheader("Generated new_dates:")
-            #st.write(new_dates)
+            st.subheader("Generated new_dates:")
+            st.write(new_dates)
         
             if new_dates.empty:
                 st.error("Generated new_dates is empty. Please check the date range generation.")
@@ -268,6 +264,34 @@ with tab2:
             st.write(X_out_of_sample.head())
         
             return X_out_of_sample
+        
+        def load_and_predict_prophet(prophet_path, future_dates):
+            model = joblib.load(prophet_path)
+            future = pd.DataFrame({'ds': future_dates})
+            
+            # Add extra regressors to the future DataFrame if they exist in the model
+            for regressor in model.extra_regressors.keys():
+                future[regressor] = 0  # or some default value; adjust as needed
+            
+            # Debugging information using Streamlit
+            st.subheader("Future DataFrame for Prophet prediction:")
+            st.write(future.head())
+            
+            # Check if future DataFrame has rows
+            if future.empty:
+                st.error("The future DataFrame is empty. Please check the date range generation.")
+                return pd.DataFrame()  # Return an empty DataFrame to avoid further errors
+            
+            try:
+                forecast = model.predict(future)
+            except ValueError as e:
+                st.error(f"ValueError during Prophet prediction: {e}")
+                return pd.DataFrame()  # Return an empty DataFrame to avoid further errors
+            except Exception as e:
+                st.error(f"Unexpected error during Prophet prediction: {e}")
+                return pd.DataFrame()  # Return an empty DataFrame to avoid further errors
+            
+            return forecast
 
         def new_data_media_contributions(X: pd.DataFrame, mmm: DelayedSaturatedMMM, original_scale: bool = True):
             mmm._data_setter(X)
