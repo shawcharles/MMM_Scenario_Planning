@@ -298,6 +298,7 @@ with tab2:
             return forecast
 
 
+
         def new_data_media_contributions(X: pd.DataFrame, mmm: DelayedSaturatedMMM, original_scale: bool = True):
             # Debugging information
             st.subheader("Columns in input DataFrame:")
