@@ -181,7 +181,11 @@ with tab2:
         # Generate out-of-sample data based on user input        
 
 
-        def generate_out_of_sample_data(n_new, channel_spends, scenario, promo_periods, custom_spending_patterns):
+        def generate_out_of_sample_data(n_new
+                                        , channel_spends
+                                        , scenario
+                                        #, promo_periods
+                                        , custom_spending_patterns):
             # Display last_date and freq for debugging
             st.subheader("Debugging Information")
             st.write(f"last_date: {last_date}")
