@@ -264,15 +264,18 @@ with tab2:
             st.write(X_out_of_sample.head())
         
             return X_out_of_sample
+                
         
-
         def load_and_predict_prophet(prophet_path, future_dates):
             model = joblib.load(prophet_path)
             future = pd.DataFrame({'ds': future_dates})
             
             # Add extra regressors to the future DataFrame if they exist in the model
             for regressor in model.extra_regressors.keys():
-                future[regressor] = 0  # or some default value; adjust as needed
+                if regressor in data.columns:
+                    future[regressor] = data[regressor].iloc[-1]  # Propagate the last known value
+                else:
+                    future[regressor] = 0  # or some default value; adjust as needed
             
             # Debugging information using Streamlit
             st.subheader("Future DataFrame for Prophet prediction:")
@@ -652,7 +655,7 @@ with tab2:
             }
             X_out_of_sample = generate_out_of_sample_data(n_new, channel_spends, custom_scenario, promo_periods, custom_spending_patterns)
 
-        st.subheader(f'Historical Marketing Spend Over Last {n_historical} periods ({interval_type.capitalize()})')
+        st.subheader(f'Historical Marketing Spend Over Last {n_historical} Periods ({interval_type.capitalize()})')
         fig_historical = go.Figure()
 
         historical_data = X[pd.to_datetime(X[date_column]) >= (last_date - pd.DateOffset(days=n_historical * (7 if interval_type == 'weekly' else 30 if interval_type == 'monthly' else 1)))]
@@ -667,7 +670,7 @@ with tab2:
             ))
 
         fig_historical.update_layout(
-            title=f'Historical Marketing Spend Over Last {n_historical} periods ({interval_type.capitalize()})',
+            title=f'Historical Marketing Spend Over Last {n_historical} Periods ({interval_type.capitalize()})',
             xaxis_title='Date',
             yaxis_title='Spend',
             template='plotly_white'
@@ -675,7 +678,7 @@ with tab2:
 
         st.plotly_chart(fig_historical)
 
-        st.subheader(f'Forecasted Marketing Spend for Next {n_new} periods ({interval_type.capitalize()})')
+        st.subheader(f'Forecasted Marketing Spend for Next {n_new} Periods ({interval_type.capitalize()})')
         fig_forecast = go.Figure()
 
         for column in media_columns:
