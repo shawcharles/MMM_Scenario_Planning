@@ -112,7 +112,7 @@ with tab1:
         # Ensure last_date is in datetime format
         last_date = pd.to_datetime(data[date_column].max())
 
-        freq = {'daily': 'D', 'weekly': 'W-MON', 'monthly': 'MS'}.get(interval_type)
+        freq = {'daily': 'D', 'weekly': 'W-SUN', 'monthly': 'MS'}.get(interval_type)
         if not freq:
             raise ValueError("Invalid interval_type. Choose from 'daily', 'weekly', or 'monthly'.")
 
