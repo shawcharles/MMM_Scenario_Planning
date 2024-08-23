@@ -180,8 +180,24 @@ with tab2:
 
         # Generate out-of-sample data based on user input
 
+        
         def generate_out_of_sample_data(n_new, channel_spends, scenario, promo_periods, custom_spending_patterns):
-            new_dates = pd.date_range(start=last_date, periods=1 + n_new, freq=freq)[1:]
+            # Display last_date and freq for debugging
+            st.subheader("Debugging Information")
+            st.write(f"last_date: {last_date}")
+            st.write(f"freq: {freq}")
+        
+            # Check if last_date is valid
+            if pd.isnull(last_date):
+                st.error("last_date is invalid. Please check the data.")
+                return pd.DataFrame()  # Return an empty DataFrame to avoid further errors
+        
+            # Generate new_dates
+            try:
+                new_dates = pd.date_range(start=last_date, periods=1 + n_new, freq=freq)[1:]
+            except Exception as e:
+                st.error(f"Error generating new_dates: {e}")
+                return pd.DataFrame()  # Return an empty DataFrame to avoid further errors
         
             if interval_type == 'weekly':
                 new_dates = new_dates[new_dates.weekday == 6]  # Ensure all dates start on Sunday
