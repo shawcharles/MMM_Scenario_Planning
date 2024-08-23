@@ -133,8 +133,8 @@ with tab2:
             future = pd.DataFrame({'ds': future_dates})
             
             # Debugging information using Streamlit
-            st.subheader("Future DataFrame for Prophet prediction:")
-            st.write(future.head())
+            #st.subheader("Future DataFrame for Prophet prediction:")
+            #st.write(future.head())
             
             # Check if future DataFrame has rows
             if future.empty:
