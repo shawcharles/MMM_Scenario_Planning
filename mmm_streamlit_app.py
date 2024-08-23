@@ -180,6 +180,7 @@ with tab2:
 
         # Generate out-of-sample data based on user input        
 
+
         def generate_out_of_sample_data(n_new, channel_spends, scenario, promo_periods, custom_spending_patterns):
             # Display last_date and freq for debugging
             st.subheader("Debugging Information")
@@ -203,15 +204,16 @@ with tab2:
             for column in media_columns:
                 X_out_of_sample[column] = channel_spends[column]
         
-            for promo in promos:
-                X_out_of_sample[promo] = 0
+            # Conditional 'promo' Column Creation
+            if scenario['promo_events']:
+                X_out_of_sample['promo'] = 0  # Initialize the column
         
-            for promo_period in promo_periods:
-                promo_start_date, promo_end_date, selected_promos = promo_period
-                promo_dates_range = pd.date_range(start=promo_start_date, end=promo_end_date, freq=freq)
-                for promo_date in promo_dates_range:
-                    for promo in selected_promos:
-                        X_out_of_sample.loc[X_out_of_sample[date_column] == promo_date, promo] = 1
+                for promo_period in promo_periods:
+                    promo_start_date, promo_end_date, selected_promos = promo_period
+                    promo_dates_range = pd.date_range(start=promo_start_date, end=promo_end_date, freq=freq)
+                    for promo_date in promo_dates_range:
+                        if promo_date in X_out_of_sample[date_column].values:
+                            X_out_of_sample.loc[X_out_of_sample[date_column] == promo_date, 'promo'] = 1
         
             for pattern in custom_spending_patterns:
                 channel, start_date, end_date, spend_value = pattern
@@ -251,11 +253,14 @@ with tab2:
             X_out_of_sample = create_features(X_out_of_sample)
             X_out_of_sample = scale_prophet_columns(X_out_of_sample)
         
+            # Ensure column order matches the model
+            X_out_of_sample = X_out_of_sample.reindex(columns=model.channel_columns + model.control_columns)
+        
             # Debugging information using Streamlit
             st.subheader("Generated out-of-sample data:")
             st.write(X_out_of_sample.head())
         
-            return X_out_of_sample               
+            return X_out_of_sample      
         
 
         def load_and_predict_prophet(prophet_path, future_dates):
