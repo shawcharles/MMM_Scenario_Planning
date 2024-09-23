@@ -1,0 +1,1 @@
+web: sh setup.sh && streamlit run mmm_streamlit_app.py
