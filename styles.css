@@ -1,0 +1,138 @@
+/* Target the dialog using its aria-label attribute */
+div[aria-label="dialog"] {
+    width: 900pt !important; /* Adjust the width in points */ 
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+/* Apply container-style padding, border radius, background, and shadow to Plotly charts */
+.element-container .stPlotlyChart .element-container iframe {
+    padding: 24px;
+    border-radius: 16px;
+    background-color: white !important;
+    -webkit-print-color-adjust: exact; /* Ensure accurate colors */
+    -webkit-filter: opacity(1);
+    box-sizing: border-box; 
+    width: 100% !important; /* Make sure the chart takes full width of the container */
+    max-width: 100%;
+    overflow: hidden;
+}
+
+/* Apply similar styles to the overall chart container */
+.element-container .stPlotlyChart {
+    padding: 24px;
+    border-radius: 16px;
+    background-color: white !important;
+    -webkit-print-color-adjust: exact; /* Ensure accurate colors */
+    -webkit-filter: opacity(1);
+    box-sizing: border-box;
+    width: 100% !important; /* Make sure the chart takes full width of the container */
+    max-width: 100%;
+    overflow: hidden;  
+}
+/* Apply container-style padding, border radius, background, and shadow to AgGrid tables */
+.ag-theme-streamlit .ag-root-wrapper {
+    padding: 24px;
+    border-radius: 16px;
+    background-color: white !important;
+    -webkit-print-color-adjust: exact; /* Ensure accurate colors */
+    -webkit-filter: opacity(1);
+}
+
+/* Apply container-style padding, border radius, background, and shadow to standard tables */
+.stDataFrame, .stTable, .stAgGrid {
+    padding: 24px;
+    border-radius: 16px;
+    background-color: white !important;
+    -webkit-print-color-adjust: exact; /* Ensure accurate colors */
+    -webkit-filter: opacity(1);
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    max-width: 100% !important; 
+    table-layout: auto;
+    box-sizing: border-box;
+}
+
+/* Ensure table inside stDataFrame stays within the container */
+.stDataFrame table, .stTable table, .stAgGrid table {
+    width: calc(100% - 48px); 
+    max-width: 100% !important; 
+    border-collapse: collapse !important; 
+    margin: 0 auto;
+    table-layout: auto;
+    box-sizing: border-box;
+}
+
+
+.dataframe {
+    width: 100%;  /* Make the table width adjust dynamically to its container */
+    table-layout: auto;  /* Use auto-layout to ensure the columns adjust based on content */
+    border-collapse: collapse;
+}
+
+.dataframe th, .dataframe td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+    white-space: nowrap;  /* Prevent content from wrapping inside cells */
+}
+
+/* Optional: Set a maximum width for the table */
+.dataframe-container {
+    max-width: 1000px;  /* Adjust this to your desired maximum width */
+    margin: auto;  /* Center the table */
+}
+
+.stNumberInput, .stText {
+    padding: 0;
+    margin: 0;
+}
+.stNumberInput input {
+    margin-top: -10px;
+}
+.download-button {
+    font-family: 'Material Symbols Outlined';
+    font-size: 24px;
+    color: grey; /* You can change this color as needed */
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+/* Optionally, add hover effect */
+.download-button:hover {
+    color: #000; /* Change color on hover */
+}
+
+@media print {
+    .element-container .stPlotlyChart .element-container iframe {
+        padding: 24px;
+        border-radius: 16px;
+        background-color: white !important;
+        -webkit-print-color-adjust: exact; /* Ensure accurate colors */
+        -webkit-filter: opacity(1);
+        box-sizing: border-box; 
+        width: 100% !important; /* Make sure the chart takes full width of the container */
+        max-width: 100% ;
+        overflow: hidden;
+    }
+        /* Apply similar styles to the overall chart container */
+    .element-container .stPlotlyChart {
+        padding: 24px;
+        border-radius: 16px;
+        background-color: white !important;
+        -webkit-print-color-adjust: exact; /* Ensure accurate colors */
+        -webkit-filter: opacity(1);
+        box-sizing: border-box;
+        width: 100% !important; /* Make sure the chart takes full width of the container */
+        max-width: 100% ;
+        overflow: hidden;
+
+    }
+    @page {
+        size: auto;  /* Use the full page size */
+        margin: 0;   /* Remove default margins */
+    }
+}
